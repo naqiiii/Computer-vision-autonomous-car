@@ -1,4 +1,4 @@
-# 🚗 Real-Time Autonomous Driving Perception System
+# Real-Time Autonomous Driving Perception System
 
 A modular, GPU-accelerated computer vision pipeline for real-time object detection, multi-object tracking, monocular depth estimation, speed estimation, and intelligent driving decisions — all rendered live on video.
 
@@ -6,26 +6,22 @@ A modular, GPU-accelerated computer vision pipeline for real-time object detecti
 ![PyTorch](https://img.shields.io/badge/PyTorch-CUDA-EE4C2C?style=flat-square&logo=pytorch)
 ![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-6236FF?style=flat-square)
 ![OpenCV](https://img.shields.io/badge/OpenCV-4.x-27338e?style=flat-square&logo=opencv)
-![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Pipeline Architecture](#pipeline-architecture)
 - [Features](#features)
 - [Project Structure](#project-structure)
 - [Requirements](#requirements)
-- [Installation](#installation)
-- [CUDA Setup](#cuda-setup)
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [Module Breakdown](#module-breakdown)
 - [Performance Optimisations](#performance-optimisations)
 - [Troubleshooting](#troubleshooting)
 - [Roadmap](#roadmap)
-- [License](#license)
 
 ---
 
@@ -95,10 +91,8 @@ CV_project/
 ├── main.py                         # Entry point
 ├── config.py                       # All thresholds and model names
 ├── requirements.txt
-├── README.md
 │
-├── videos/
-│   └── sample2.mp4                 # Place your input video here
+├── videos/      
 │
 ├── detector/
 │   └── yolo_detector.py
@@ -143,14 +137,14 @@ CPU-only mode is supported but runs at 1–3 FPS for depth — not suitable for 
 
 ## Installation
 
-### 1. Clone the repository
+### Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/CV_project.git
+git clone[ https://github.com/naqiiii/Computer-vision-car.git]
 cd CV_project
 ```
 
-### 2. Create and activate a virtual environment
+### Create and activate a virtual environment
 
 ```bash
 python -m venv venv
@@ -161,117 +155,6 @@ venv\Scripts\activate
 # Linux / macOS
 source venv/bin/activate
 ```
-
-### 3. Install PyTorch with CUDA
-
-See [CUDA Setup](#cuda-setup) below for the exact command for your system.
-
-### 4. Install remaining dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Place your video
-
-Put your input video at `videos/sample2.mp4`, or update `VIDEO_PATH` in `main.py`:
-
-```python
-VIDEO_PATH = r"C:\Users\YourName\path\to\your\video.mp4"
-```
-
-> **Windows users:** always use the `r""` raw string prefix on paths. Without it, backslashes become escape characters (`\U`, `\D`, `\v`) and the path silently breaks — `cap.isOpened()` returns False even when the file genuinely exists.
-
----
-
-## CUDA Setup
-
-First check your driver version:
-
-```bash
-nvidia-smi
-```
-
-Then install the matching PyTorch build:
-
-```bash
-# CUDA 13.x driver on Windows — use cu128 (backward-compatible, cuDNN works)
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
-
-# CUDA 12.1
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-# CUDA 11.8
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-
-# CPU only (slow)
-pip install torch torchvision torchaudio
-```
-
-> **CUDA 13.x on Windows:** cuDNN 9.x for CUDA 13.x is not yet supported on Windows. The `cu128` build runs correctly because NVIDIA drivers are backward-compatible — your CUDA 13.x driver runs cu128 code without issues.
-
-Verify it worked:
-
-```python
-import torch
-print(torch.cuda.is_available())       # True
-print(torch.cuda.get_device_name(0))   # your GPU name
-print(torch.__version__)               # e.g. 2.x.x+cu128
-```
-
----
-
-## Configuration
-
-All tunable parameters live in `config.py`:
-
-```python
-import torch
-
-class Config:
-    DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-
-    # YOLO
-    YOLO_MODEL    = "yolov8m.pt"           # n / s / m / l / x
-    YOLO_CONF     = 0.4
-    YOLO_CLASSES  = [0, 1, 2, 3, 5, 7]    # person, bicycle, car, motorcycle, bus, truck
-
-    # MiDaS
-    MIDAS_MODEL   = "DPT_Hybrid" if torch.cuda.is_available() else "MiDaS_small"
-
-    # Decision thresholds (0 = close, 100 = far)
-    DEPTH_STOP    = 30
-    DEPTH_WARN    = 60
-
-    # Tracker
-    MAX_AGE       = 30
-
-    # Speed EMA
-    SPEED_ALPHA   = 0.3   # 0 = heavy smooth, 1 = no smooth
-
-    # Lane ROI (fraction of frame height where road begins)
-    LANE_ROI_TOP  = 0.55
-```
-
-### Tuning guide
-
-| Parameter | Effect of lowering | Effect of raising |
-|-----------|-------------------|-------------------|
-| `DEPTH_STOP` | STOP triggers for farther objects | Only stops for very close objects |
-| `DEPTH_WARN` | WARN zone starts closer | WARN zone starts further away |
-| `SPEED_ALPHA` | Smoother speed values, more lag | Faster response, more jitter |
-| `YOLO_CONF` | More detections, more false positives | Fewer detections, fewer false positives |
-| `MAX_AGE` | Tracks dropped faster after occlusion | Tracks persist longer |
-
----
-
-## Usage
-
-```bash
-python main.py
-```
-
-Press **ESC** to quit.
 
 ### Output window elements
 
@@ -433,11 +316,6 @@ Raise `n_init` in the tracker (`n_init=5`) — more confirmation frames before a
 
 ---
 
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
 
 ## Acknowledgements
 
